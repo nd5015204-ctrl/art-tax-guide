@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>미술품 양도소득세 계산법 1분 컷</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #faf9f6;
+      color: #2c2c2c;
+      line-height: 1.9;
+      font-size: 17px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: #fff;
+      padding: 80px 24px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(228, 197, 144, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 80%, rgba(228, 197, 144, 0.05) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    .hero-label {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #e4c590;
+      border: 1px solid rgba(228, 197, 144, 0.4);
+      padding: 6px 18px;
+      border-radius: 30px;
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .hero .subtitle {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 300;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+      position: relative;
+    }
+
+    /* Main Content */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Intro */
+    .intro {
+      padding: 56px 0 40px;
+      border-bottom: 1px solid #e8e4de;
+    }
+
+    .intro p {
+      font-size: 17px;
+      color: #4a4a4a;
+      line-height: 2;
+      margin-bottom: 16px;
+    }
+
+    .intro p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Sections */
+    .section {
+      padding: 48px 0;
+      border-bottom: 1px solid #e8e4de;
+    }
+
+    .section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: #1a1a2e;
+      color: #e4c590;
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: 50%;
+      margin-bottom: 16px;
+    }
+
+    .section h2 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .section p {
+      font-size: 17px;
+      color: #4a4a4a;
+      line-height: 2;
+      margin-bottom: 16px;
+    }
+
+    /* Highlight Quote */
+    .highlight-box {
+      background: linear-gradient(135deg, #fdf8f0 0%, #faf5eb 100%);
+      border-left: 4px solid #e4c590;
+      border-radius: 0 12px 12px 0;
+      padding: 24px 28px;
+      margin: 24px 0;
+      font-size: 16px;
+      color: #5a4a30;
+      line-height: 1.9;
+    }
+
+    .highlight-box strong {
+      color: #8b6914;
+    }
+
+    /* Example Box */
+    .example-box {
+      background: #fff;
+      border: 1px solid #e8e4de;
+      border-radius: 12px;
+      padding: 28px;
+      margin: 24px 0;
+    }
+
+    .example-box .label {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    .example-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+    }
+
+    .example-item + .example-item {
+      border-top: 1px solid #f0ede8;
+    }
+
+    .example-icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    .example-icon.tax-free {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .example-icon.taxable {
+      background: #fce4ec;
+      color: #c62828;
+    }
+
+    .example-text {
+      font-size: 16px;
+      color: #4a4a4a;
+      line-height: 1.7;
+    }
+
+    .example-text .tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .tag.free {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .tag.tax {
+      background: #fce4ec;
+      color: #c62828;
+    }
+
+    /* Deduction Table */
+    .deduction-card {
+      background: #fff;
+      border: 1px solid #e8e4de;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 24px 0;
+    }
+
+    .deduction-row {
+      display: flex;
+      align-items: stretch;
+      border-bottom: 1px solid #f0ede8;
+    }
+
+    .deduction-row:last-child {
+      border-bottom: none;
+    }
+
+    .deduction-label {
+      flex: 1;
+      padding: 18px 24px;
+      font-size: 15px;
+      color: #4a4a4a;
+      background: #faf9f6;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+    }
+
+    .deduction-value {
+      flex: 0 0 120px;
+      padding: 18px 24px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .deduction-note {
+      font-size: 13px;
+      color: #888;
+      font-weight: 400;
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* Calculation Example */
+    .calc-box {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 16px;
+      padding: 32px;
+      margin: 28px 0;
+      color: #fff;
+    }
+
+    .calc-box .calc-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #e4c590;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .calc-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      font-size: 16px;
+    }
+
+    .calc-row .label {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .calc-row .value {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .calc-divider {
+      border: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      margin: 12px 0;
+    }
+
+    .calc-row.total {
+      padding-top: 14px;
+    }
+
+    .calc-row.total .label {
+      color: #e4c590;
+      font-weight: 600;
+    }
+
+    .calc-row.total .value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #e4c590;
+    }
+
+    .calc-row.rate {
+      margin-top: 4px;
+    }
+
+    .calc-row.rate .value {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 400;
+    }
+
+    /* Checklist Section */
+    .checklist-section {
+      padding: 56px 0;
+    }
+
+    .checklist-section h2 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .checklist-section .desc {
+      font-size: 16px;
+      color: #888;
+      margin-bottom: 28px;
+    }
+
+    .checklist-item {
+      background: #fff;
+      border: 1px solid #e8e4de;
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .checklist-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .check-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-top: 2px;
+    }
+
+    .check-content .question {
+      font-size: 17px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    .check-content .answer {
+      font-size: 15px;
+      color: #6a6a6a;
+      line-height: 1.7;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 40px 24px 60px;
+      border-top: 1px solid #e8e4de;
+    }
+
+    .footer p {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 17px;
+      color: #6a6a6a;
+      line-height: 2;
+      max-width: 520px;
+      margin: 0 auto;
+      font-style: italic;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero {
+        padding: 60px 20px 48px;
+      }
+
+      .container {
+        padding: 0 20px;
+      }
+
+      .section {
+        padding: 36px 0;
+      }
+
+      .deduction-row {
+        flex-direction: column;
+      }
+
+      .deduction-value {
+        flex: auto;
+        justify-content: flex-start;
+        padding: 0 24px 16px;
+      }
+
+      .calc-box {
+        padding: 24px;
+      }
+
+      .checklist-item {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-label">Art & Money</div>
+    <h1>미술품 양도소득세<br>계산법 1분 컷</h1>
+    <p class="subtitle">취향을 소유하는 대가, 그 우아한 결말에 대하여</p>
+  </header>
+
+  <!-- Intro -->
+  <div class="container">
+    <div class="intro">
+      <p>
+        미술품 투자를 일컬어 <strong>'아트테크(Art-Tech)'</strong>라 부르는 시대입니다.
+        캔버스는 더 이상 감상의 대상만이 아니라 자산이 되었지만,
+        모든 소유에는 끝이 있고 그 끝에는 세금이라는 현실적인 문제가 기다리고 있습니다.
+      </p>
+      <p>
+        많은 이들이 미술품 세금을 복잡하고 무겁게 여기지만,
+        미술 시장의 규칙을 살펴보면 <strong>매우 유리한 세법</strong>을 발견할 수 있습니다.
+      </p>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="section">
+      <div class="section-number">1</div>
+      <h2>'생존'이라는 가장 강력한<br>비과세 치트키</h2>
+      <p>
+        가장 먼저 확인할 것은 <strong>작가의 생존 여부</strong>입니다.
+      </p>
+      <div class="highlight-box">
+        양도일 현재 <strong>생존해 있는 국내 작가</strong>의 작품은
+        거래 금액이 10억이든 100억이든
+        <strong>세금을 단 한 푼도 매기지 않습니다.</strong>
+      </div>
+      <p>
+        작가가 살아있다는 사실만으로 수익 전체를 온전히 가져갈 수 있습니다.
+      </p>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section">
+      <div class="section-number">2</div>
+      <h2>6천만 원, 과세의 문턱</h2>
+      <p>
+        세금은 작가가 작고했거나 외국 작가의 작품일 경우에만 발생합니다.
+        그러나 <strong>개당 양도가액이 6,000만 원 미만</strong>이라면 역시 비과세입니다.
+      </p>
+      <div class="example-box">
+        <div class="label">사례</div>
+        <div class="example-item">
+          <div class="example-icon tax-free">&#10003;</div>
+          <div class="example-text">
+            국내 작고 작가 작품을 <strong>5,500만 원</strong>에 판매
+            <span class="tag free">세금 0원</span>
+          </div>
+        </div>
+        <div class="example-item">
+          <div class="example-icon taxable">!</div>
+          <div class="example-text">
+            외국 작가 작품을 <strong>7,000만 원</strong>에 판매
+            <span class="tag tax">과세 대상</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section">
+      <div class="section-number">3</div>
+      <h2>'양도소득'이 아닌<br>'기타소득'의 마법</h2>
+      <p>
+        미술품 판매로 인한 수익은 부동산처럼 양도소득이 아니라
+        <strong>기타소득</strong>으로 분류됩니다.
+      </p>
+      <div class="highlight-box">
+        <strong>22%</strong>(지방소득세 포함)의 단일 세율로 <strong>분리과세</strong>되므로,
+        높은 연봉으로 인한 세율 상향 우려가 없습니다.
+      </div>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="section">
+      <div class="section-number">4</div>
+      <h2>필요경비, 90%의 압도적 공제율</h2>
+      <p>
+        미술품 세금이 가벼운 이유는 바로 <strong>필요경비율</strong>에 있습니다.
+      </p>
+
+      <div class="deduction-card">
+        <div class="deduction-row">
+          <div class="deduction-label">
+            양도가액 1억 원 이하
+          </div>
+          <div class="deduction-value">90%</div>
+        </div>
+        <div class="deduction-row">
+          <div class="deduction-label">
+            양도가액 1억 원 초과
+            <span class="deduction-note">1억까지 90%, 초과분 80%</span>
+          </div>
+          <div class="deduction-value">80~90%</div>
+        </div>
+        <div class="deduction-row">
+          <div class="deduction-label">
+            10년 이상 보유 시
+            <span class="deduction-note">초과분도 90% 적용</span>
+          </div>
+          <div class="deduction-value">90%</div>
+        </div>
+      </div>
+
+      <div class="calc-box">
+        <div class="calc-title">계산 예시</div>
+        <div class="calc-row">
+          <span class="label">작고 작가 작품 판매가</span>
+          <span class="value">1억 원</span>
+        </div>
+        <div class="calc-row">
+          <span class="label">필요경비 (90%)</span>
+          <span class="value">- 9,000만 원</span>
+        </div>
+        <hr class="calc-divider">
+        <div class="calc-row">
+          <span class="label">과세 대상 소득</span>
+          <span class="value">1,000만 원</span>
+        </div>
+        <div class="calc-row">
+          <span class="label">세율 (지방소득세 포함)</span>
+          <span class="value">× 22%</span>
+        </div>
+        <hr class="calc-divider">
+        <div class="calc-row total">
+          <span class="label">실제 납부 세금</span>
+          <span class="value">220만 원</span>
+        </div>
+        <div class="calc-row rate">
+          <span class="label"></span>
+          <span class="value">전체 판매가의 2.2%에 불과</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Checklist -->
+    <div class="checklist-section">
+      <div class="section-number">5</div>
+      <h2>컬렉터의 체크리스트</h2>
+      <p class="desc">미술품 매각 전, 세 가지 질문을 던져보세요.</p>
+
+      <div class="checklist-item">
+        <div class="check-icon">Q</div>
+        <div class="check-content">
+          <div class="question">국내 작가인가요? 생존해 있나요?</div>
+          <div class="answer">YES라면 → 무조건 비과세입니다.</div>
+        </div>
+      </div>
+
+      <div class="checklist-item">
+        <div class="check-icon">Q</div>
+        <div class="check-content">
+          <div class="question">판매 가격이 6,000만 원 미만인가요?</div>
+          <div class="answer">YES라면 → 역시 비과세입니다.</div>
+        </div>
+      </div>
+
+      <div class="checklist-item">
+        <div class="check-icon">Q</div>
+        <div class="check-content">
+          <div class="question">10년 넘게 소장하셨나요?</div>
+          <div class="answer">YES라면 → 세금의 90%를 경비로 공제할 수 있습니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>
+        미술품 투자는 미적 가치를 발견하는 기쁨과
+        세제 혜택이라는 실리를 동시에 챙기는
+        고도의 지적 게임입니다.
+        세법의 흐름까지 읽어내는 영리한 컬렉터가 되어 보세요.
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>
